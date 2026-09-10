@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Love Agreement</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pyidaungsu', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #ffdde1;
+            background-image: linear-gradient(to top, #ee9ca7 0%, #ffdde1 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-box img {
+            width: 130px;
+            height: 130px;
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            min-height: 60px;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .btn-yes {
+            background-color: #ff4757;
+            color: white;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4);
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.05);
+            background-color: #ff6b81;
+        }
+
+        .btn-no {
+            background-color: #e0e0e0;
+            color: #555;
+            position: absolute;
+            transition: all 0.2s ease;
+        }
+
+        .warning-text {
+            color: #ff4757;
+            font-size: 12px;
+            margin-top: 5px;
+            height: 18px;
+        }
+
+        /* Final Agreement List Style */
+        .agreement-list {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .agreement-title {
+            text-align: center;
+            color: #ff4757;
+            font-size: 22px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .agreement-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+            font-size: 14px;
+        }
+
+        .agreement-item span.answer {
+            color: #ff4757;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="appCard">
+    <div class="question-text" id="question">ပြန် 12 ကြမလား ?</div>
+    
+    <div class="image-box">
+        <img id="sticker" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdW1uZWJnY2d0eTl5dG5uN3ZweGN5eXVxeG52bTV3N3k2eWp3aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="cute-gif">
+    </div>
+
+    <div class="warning-text" id="warning">နှိပ်လို့မရဘူးနော်! 😜</div>
+
+    <div class="buttons-container" id="btnGroup">
+        <button class="btn btn-yes" id="yesBtn" onclick="nextQuestion()">Yes</button>
+        <button class="btn btn-no" id="noBtn" onmouseover="moveNoBtn()" onclick="moveNoBtn()">No</button>
+    </div>
+</div>
+
+<script>
+    // မေးခွန်းများ နှင့် ရွေးချယ်နိုင်သော အဖြေများ
+    const quizData = [
+        {
+            question: "၁။ ပြန် 12 ကြမလား ?",
+            yesText: "Yes",
+            noText: "No",
+            img: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdW1uZWJnY2d0eTl5dG5uN3ZweGN5eXVxeG52bTV3N3k2eWp3aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif"
+        },
+        {
+            question: "၂။ သတိရနေခဲ့တာ သိလား..",
+            yesText: "တူတူပဲ",
+            noText: "မရတော့ပါဘူး",
+            img: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXJpMG5vMXA3b2NzcW9ycTFyMnYwa3o2aG1tZHptZW9iOHdtb3FiZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/KBDzqEE1XMht5fSRUk/giphy.gif"
+        },
+        {
+            question: "၃။ ချစ်သေးတယ်မလား ?",
+            yesText: "ချစ်တယ်",
+            noText: "မချစ်တော့ဘူး",
+            img: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjRreTFndnlkYmxvdzEwaXNvd20yOHR1cnFvNXF4OHh4bDIydm1ndSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/3o7TKoWXm3okO1kgHC/giphy.gif"
+        },
+        {
+            question: "၄။ ပြန်လာမယ်မလား ?",
+            yesText: "အင်း",
+            noText: "တော်ပြီ",
+            img: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZndyY2tlbnY2bzI1NW5pMWl4N3NqOHI1bjl3MG81eXZmdmlwaHowaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/LpDmM2w922yB3fNEiY/giphy.gif"
+        },
+        {
+            question: "၅။ ဒါဆို ပြန်ချစ်ကြမယ်နော်",
+            yesText: "Yes",
+            noText: "Nope",
+            img: "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaG9iY3F3cXdtNzFndnV3OTU3YTBmbThubW5hcm9sbGNicTZxOXprZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/MDJ9IbxxvDUQM/giphy.gif"
+        }
+    ];
+
+    let currentStep = 0;
+    const userAnswers = [];
+
+    const questionEl = document.getElementById("question");
+    const stickerEl = document.getElementById("sticker");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const cardEl = document.getElementById("appCard");
+
+    // မလိုချင်သော အဖြေခလုတ်ကို ထွက်ပြေးစေရန် Function
+    function moveNoBtn() {
+        const container = document.getElementById("btnGroup");
+        const containerRect = container.getBoundingClientRect();
+        
+        // ခလုတ် ရောက်သွားနိုင်သည့် နေရာလွတ်ကို တွက်ချက်ခြင်း
+        const maxX = containerRect.width - noBtn.offsetWidth;
+        const maxY = 150; // Dynamic vertical move limit
+
+        const randomX = Math.floor(Math.random() * (maxX - 20));
+        const randomY = Math.floor(Math.random() * maxY) - 50;
+
+        noBtn.style.left = `${randomX}px`;
+        noBtn.style.top = `${randomY}px`;
+    }
+
+    // နောက်မေးခွန်းတစ်ခုသို့ သွားရန် Function
+    function nextQuestion() {
+        // လက်ရှိအဖြေကို မှတ်ထားမည်
+        userAnswers.push({
+            q: quizData[currentStep].question,
+            a: quizData[currentStep].yesText
+        });
+
+        currentStep++;
+
+        // ခလုတ်နေရာကို ပုံမှန်အတိုင်း ပြန်စမည်
+        noBtn.style.left = "auto";
+        noBtn.style.top = "auto";
+        noBtn.style.right = "20px";
+
+        if (currentStep < quizData.length) {
+            // နောက်မေးခွန်းကို ပြမည်
+            questionEl.innerText = quizData[currentStep].question;
+            yesBtn.innerText = quizData[currentStep].yesText;
+            noBtn.innerText = quizData[currentStep].noText;
+            stickerEl.src = quizData[currentStep].img;
+        } else {
+            // နောက်ဆုံး သဘောတူညီချက် (Agreement) စာရွက်ကို ပြမည်
+            showAgreement();
+        }
+    }
+
+    // အားလုံးပြီးပါက Agreement ပြသပေးသည့် Function
+    function showAgreement() {
+        let listHTML = `<div class="agreement-title">💖 Our Love Agreement</div><div class="agreement-list">`;
+        
+        userAnswers.forEach((item) => {
+            listHTML += `
+                <div class="agreement-item">
+                    <span>${item.q}</span>
+                    <span class="answer">${item.a}</span>
+                </div>
+            `;
+        });
+
+        listHTML += `</div>
+            <button class="btn btn-yes" style="width: 100%; margin-top: 15px;" onclick="location.reload()">ဒီစာချုပ်ကို သိမ်းမယ် 📸</button>
+        `;
+
+        cardEl.innerHTML = listHTML;
+    }
+</script>
+
+</body>
+</html>
